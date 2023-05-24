@@ -1,0 +1,132 @@
+<%- include('../inc/header_inc.ejs')  %>
+<% if(typeof(msg)=='underfine'){
+    var msg='';
+  } -%>
+
+<div class="container-fluid mt-3" style="margin-bottom: 500px;">
+
+    <h1>Danh sách người dùng</h1>
+    <%= msg  %>
+   
+    <div class="row mb-5">
+        <div class="col-md-12 d-flex justify-content-end">
+          <form action="/users/reload" method="POST">
+            <button type="submit" class="btn" >
+              <i class="bi bi-arrow-clockwise"></i>
+            </button>
+          </form>
+          <form action="/users/searchUser" method="POST">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Tên đăng nhập" name="userName">
+              <button class="btn btn-outline-primary" type="submit">Search</button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th class="text-center">ID</th>
+                <th class="text-center">Tên đăng nhập</th>
+                <th class="text-center">Email</th>
+                <th class="text-center">Vai trò</th>
+                <th class="text-center">Hành Động</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            <% for(let i=0;i<listUser.length;i++){ %>
+                <tr>
+                    <td class="text-center"><%= i+1 %></td>
+                    <!-- <td style="text-align: center; vertical-align: middle;max-width: 50px;"><img src= alt="anh" style="width: 80px; height: 80px;"></td> -->
+                    <td class="text-center"><%= listUser[i].userName %></td>
+                    <td class="text-center"><%= listUser[i].email %></td>      
+                    <td class="text-center" ><%= listUser[i].group %></td>
+                    
+                    <td class="text-center" style="max-width: 20px;" >
+                    <button class="btn btn-danger" type="button" data-bs-toggle="modal"
+                      data-bs-target="#deleteModal" data-product-id="<%= listUser[i]._id %>" ><i class="bi bi-trash" style="font-size: 18px;"></i></button>
+                      
+                      <button id="edit-btn" class="btn btn-primary btn-gradient" type="button" data-bs-toggle="modal"
+                      data-bs-target="#updateModal"  data-product="<%= JSON.stringify(listUser[i]) %>"><i class="bi bi-pencil-square" style="font-size: 18px;"></i></button></td>
+                </tr>
+
+
+                <% } %>
+            
+        </tbody>
+    </table>
+</div>
+<!-- form edit -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Sửa Thể Loại</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container" id="add-form">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body col-md-12 ">
+                                <form action="/users/update" method="POST"  id="formUpdate" >
+                                    <input type="hidden" name="userId" id="userId">
+                                    <div class="mb-3">
+                                        <label for="productName" class="form-label">Tên tài khoản</label>
+                                        <input type="text" class="form-control" id="UserName" name="UserName">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="productClass" class="form-label">Password</label>
+                                        <input type="text" class="form-control" id="userPassword" name="userPassword">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="emailUser" name="emailUser">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="group" class="form-label">Vai Trò</label>
+                                        <select class="form-select" id="groupUser" name="groupUser">
+                                            <option id="groupUser">Chọn</option>
+                                            <option value="admin">Admin</option>
+                                            <option value="user">User</option>
+                                            
+                                        </select>
+                                    </div>
+                                    
+                                    
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- form xoá -->
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xoá User</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form action="/users/delete" method="POST" id="formDelete">
+            <input type="hidden" name="productIdDelete" id="productIdDelete">
+            <div class="modal-body">
+            Bạn có chắc muốn xoá User này không?
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+            <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xoá</button>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+<%- include('../inc/footer_inc.ejs')  %>

@@ -1,0 +1,170 @@
+<%- include('../inc/header_inc.ejs')  %>
+<div class="container-fluid mt-3">
+
+  <h1><%= title %></h1>
+  <!-- table-striper: tạo màu phân biệt các hàng -->
+  <div class="d-grid gap-2 col-md-5 ms-auto mb-1" >
+    <div class="input-group mb-3 ms-auto" style="max-width: 600px;">
+        <input type="text" class="form-control" aria-label="Text input with dropdown button" placeholder="Tìm kiếm...">
+        <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-funnel-fill"></i></button>
+        <ul class="dropdown-menu dropdown-menu-end">
+          <li><a class="dropdown-item" href="#">Tên Sản Phẩm</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Loại</a></li>
+          <li><hr class="dropdown-divider"></li>
+          <li><a class="dropdown-item" href="#">Giá sản phẩm</a></li>
+        </ul>
+        <button id="add-btn ms-1" class="btn btn-success" type="button" data-bs-toggle="modal"
+              data-bs-target="#exampleModal">Thêm Loại Sản Phẩm</button>
+    </div>
+      
+  </div>
+  
+  <table class="table table-bordered table-striped table-hover">
+      <thead>
+          <tr>
+              <th class="text-center">STT</th>
+              <th class="text-center">Tên Loại sản phẩm</th>      
+              <th class="text-center">Mô tả</th>
+              <th class="text-center">Hành Động</th>
+              
+          </tr>
+      </thead>
+      <tbody> 
+        
+        <% listLoai.forEach(row=>{ %>
+          <tr>
+            <td class="text-center"> <%=  %> </td>
+            <!-- <td style="text-align: center; vertical-align: middle;max-width: 50px;"><img src= alt="anh" style="width: 80px; height: 80px;"></td> -->
+            <td class="text-center"><%= row.nameLoai %></td> 
+            <td class="text-center" style="max-width: 200px;"><%= row.mota %></td>
+            
+            <td class="text-center" style="max-width: 20px;" ><button class="btn btn-danger" type="button" data-bs-toggle="modal"
+              data-bs-target="#deleteModal" data-product-id="<%= row._id %>" ><i class="bi bi-trash" style="font-size: 18px;"></i></button></i> 
+              
+              <button id="update-btn" class="btn btn-primary btn-gradient" type="button" data-bs-toggle="modal"
+              data-bs-target="#updateModal" data-product="<%= JSON.stringify(row) %>" ><i class="bi bi-pencil-square" style="font-size: 18px;"></i></button></td>
+        </tr>
+
+          <% };) ;%>
+        
+    </tbody>
+      
+      
+  </table>
+  <nav class="d-grid gap-2 col-md-3 mx-auto mb-1" aria-label="Page navigation example">
+    <ul class="pagination">
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Previous">
+          <span aria-hidden="true">&laquo;</span>
+        </a>
+      </li>
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li class="page-item">
+        <a class="page-link" href="#" aria-label="Next">
+          <span aria-hidden="true">&raquo;</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  
+
+  
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+          <div class="modal-content">
+              <div class="modal-header bg-success">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Thêm Loại sản phẩm</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                  <div class="container" id="add-form">
+                      <div class="row">
+                          <div class="card">
+                              <div class="card-body col-md-12 ">
+                                  <form action="/product/addCategory" method="POST"  >
+                                      <div class="mb-3">
+                                          <label for="productName" class="form-label">Tên Loại sản phẩm</label>
+                                          <input type="text" class="form-control" id="" name="categoryName">
+                                      </div>
+                                      <div class="mb-3">
+                                          <label for="describe" class="form-label">Mô tả</label>
+                                          <!-- <input type="text" class="form-control" id="describe" name="productDescribe"> -->
+                                          <textarea class="form-control" aria-label="With textarea" id="" name="categoryDescribe" ></textarea>
+                                      </div>
+                                      
+                                      
+                                      <button type="submit" class="btn btn-primary">Save</button>
+                                  </form>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  </div>
+</div>
+
+<div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Sửa Thể Loại</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="container" id="add-form">
+                    <div class="row">
+                        <div class="card">
+                            <div class="card-body col-md-12 ">
+                                <form action="/product/updateCategory" method="POST"  id="formUpdate" >
+                                  <input type="hidden"  id="categoryID" name="categoryID">
+                                  
+                                  <div class="mb-3">
+                                        <label for="productName" class="form-label">Tên Loại Sản Phẩm</label>
+                                        <input type="text" class="form-control" id="categoryNameLoai" name="categoryNameLoai">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="describe" class="form-label">Mô tả</label>
+                                        <!-- <input type="text" class="form-control" id="describe" name="productDescribe"> -->
+                                        <textarea class="form-control" aria-label="With textarea" id="categoryDescribe" name="categoryDescribe" ></textarea>
+                                    </div>
+                                    
+                                    
+                                    <button type="submit" class="btn btn-primary">Save</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xoá sản phẩm</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action="/product/deleteCategory" method="POST" id="formDelete">
+          <input type="hidden" name="productIdDelete" id="productIdDelete">
+          <div class="modal-body">
+          Bạn có chắc muốn xoá sản phẩm này không?
+          </div>
+          <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xoá</button>
+          </div>
+      </form>
+    </div>
+  </div>
+</div>
+<%- include('../inc/footer_inc.ejs')  %>
